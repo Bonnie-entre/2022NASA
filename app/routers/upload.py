@@ -161,31 +161,3 @@ def html_page() -> str:
     </html>
 
     """
-
-# function upload_files(){{
-#                 var input = document.querySelectorAll('input[type="file"]')
-
-#                 var data = new FormData()
-#                 for (const file of input.files) {{
-#                     data.append('files', file, file.name)
-#                 }}
-
-#                  fetch('http://127.0.0.1:8000/upload/multifiles', {{
-#                     method: 'POST',
-#                     body: data
-#                 }})  
-#             }}
-# data.append(file.name, file.files[0])
-
-    #  var data = new FormData()
-    #             data.append('files', input.files[0], input.files[0].name)
-    # var requestOptions = {{
-    #                 method: 'POST',
-    #                 body: data,
-    #                 redirect: 'follow'
-    #             }}
-
-    #             fetch("http://127.0.0.1:8000/upload/multifiles", requestOptions)
-    #             .then(response => response.text())
-    #             .then(result => console.log(result))
-    #             .catch(error => console.log('error', error));

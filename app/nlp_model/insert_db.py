@@ -6,6 +6,8 @@ def get_next_fileID():
     cursor = connect_cursor()
     cursor.execute(f"""SELECT * FROM files ORDER BY ID DESC LIMIT 1;""" )
     posts = cursor.fetchall()
+    if(len(posts)==0):
+        return 0
     return dict(posts[0])['id']+1
 
 

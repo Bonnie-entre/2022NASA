@@ -5,22 +5,8 @@ from .. import models, schemas
 from ..database import get_db, connect_cursor
 from sqlalchemy.orm import Session
 
-router = APIRouter(
-    # prefix="/files"
-)
+router = APIRouter()
 
-# def show_keyword(obj_keyword):
-#     html_keyword=""
-#     for i in range(len(obj_keyword)):
-#         if obj_keyword[i].output_keyword is None:
-#             continue
-
-#         list_keyword = obj_keyword[i].output_keyword
-#         for j in range(len(list_keyword)):
-#             html_keyword += f"""<p>{list_keyword[j]}</p>"""
-    
-#     print(html_keyword)
-#     return html_keyword
 
 def show_keyword(list_keyword):
     if list_keyword is None:
@@ -29,7 +15,11 @@ def show_keyword(list_keyword):
     
     html_keyword += """<p>"""
     for j in range(len(list_keyword)):
-        html_keyword += f"""<span>{list_keyword[j]}  </span>"""
+        if j== len(list_keyword)-1:
+            html_keyword += f"""<span>{list_keyword[j]}  </span>"""
+        else:
+            html_keyword += f"""<span>{list_keyword[j]},  </span>"""
+        
     html_keyword += """</p>"""
     return html_keyword
 
@@ -47,7 +37,7 @@ def show_image(list_pic):
 
     html += """<p>"""
     for j in range(len(list_pic)):
-        html += f"""<span><img src="../../static/image/{list_pic[j]}.jpg" width="60%" style="vertical-align:middle"></img></span>"""
+        html += f"""<span><img src="../../static/image/{list_pic[j]}.png" width="60%" style="vertical-align:middle"></img></span>"""
     html += """</p>"""
     print(html)
     return html
@@ -56,39 +46,57 @@ def show_image(list_pic):
 @router.get("/files/content")
 def one_file_byID(db: Session = Depends(get_db), file_id: str="1"):
     files = db.query(models.Files).filter(models.Files.id==int(file_id)).all()
-    return HTMLResponse(content=html_pdf(files[0].filename, file_id, show_keyword(files[0].output_keyword), show_outline(files[0].output_outline), show_image(files[0].output_pic)), status_code=200)
+    return HTMLResponse(content=html_pdf(files[0].filename, files[0].file_title, file_id, show_keyword(files[0].output_keyword), files[0].output_keyword_float, show_outline(files[0].output_outline), show_image(files[0].output_pic)), status_code=200)
 
 
-@router.get("/files", response_model=List[schemas.FilesBase])
+@router.get("/filesjson", response_model=List[schemas.FilesBase])
 def show_files(db: Session = Depends(get_db),  skip: int=0): #, search: Optional[str]=""    #limit: int=20, #.limit(limit)
     files = db.query(models.Files).offset(skip).all()  #.filter(models.Files.output_outline.contains(search))  #if 該欄 null ，就不會出現該份資料
-    # print(files[0].filename)
-    # show_keyword(files[1].output_keyword)
-    # show_keyword(files)
-    # return HTMLResponse(content=html_content(), status_code=200)
+
     return files
 
-def html_pdf(filename, file_id, file_keyword, file_outline, file_pic) -> str:
+def html_pdf(filename, file_title, file_id, file_keyword, keyword_float, file_outline, file_pic) -> str:
     return f"""
     <html>
         <head>
             <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
         </head>
-        <body>
-            <header class="header" style="font-size: 30px; font-weight:400; padding:30px; color:white; background:#5E9BC9;">
-                2022 NASA
-            </header>
-            <div class="content">
-            <h2><span style="color: #296889;"><strong>{filename}</strong></span></h2>
-            <p>&nbsp;</p>
-            {file_outline}
-            {file_keyword}
-            {file_pic}
-            <h3><span style="color: #296889;"><strong>Pdf:</strong></span></h3>
-            <object data="../static/file/{file_id}.pdf" type="application/pdf" width="100%" height="100%"></object>
+        <body style="margin:0px">
+            <div style="display:flex; flex-direction:column; width:100vw; justify-content: center; align-items: center;">
+                <header class="header" style="display:flex; flex-direction:row; width:100%; height:8%; justify-content:flex-end; align-items: center; margin:10px; position: fixed; top: 0px;">
+                    <div style="display:flex; width:60%; height:100%; padding:10px; justify-content: flex-end;">
+                        <input type="search" id="SearchKeyword" placeholder="Enter the keyword..." style="width:40%; margin:4px; padding:5px; border-color:black; border-width:thin; border-radius: 3px;">
+                        <button onclick="show_search()"  style="width:12%; margin:4px; padding:5px; border-radius: 8px; border-color:#FF8045; border-width:thin; color:#FF8045; background-color:transparent;">Search</button>
+                    </div>
+                </header>
+
+                <div class="content" style=" width:90%; height:80%;  position: fixed; top: 12%; overflow-y:scroll;">
+                    <h1><span style="color: #296889;"><strong>{file_title}</strong></span></h1>
+                    <p>{filename}</p>
+                    {file_outline}
+                    {file_keyword}
+                    <h3><span style="color: #296889;"><strong>Keywords(Detail Result):</strong></span></h3>
+                    <p>{keyword_float}</p>
+                    {file_pic}
+
+                    <h3><span style="color: #296889;"><strong>Pdf:</strong></span></h3>
+                    <object data="../static/file/{filename}" type="application/pdf" width="100%" height="100%"></object>
+                </div>
+
+                <div class="producer" style="position: fixed; bottom: 0px; display:flex; flex-direction:row; width:100%; height: 6vh; justify-content:center; align-items: center; background-color:#D9D9D9;">
+                    <span style="color: white;">Produced by : Cai Yi-Wen, Huang Nian-Hui, Wang Chun-Chieh </span>
+                </div>
             </div>
         </body>
+
+        <script>
+            function show_search(){{
+                search_input = document.getElementById("SearchKeyword").value 
+                window.location.href =  "http://127.0.0.1:8000/search?outline=" + search_input + "&keyword=" + search_input          
+            }}
+        </script>
     </html>
 
     """
 
+# display:flex; flex-direction:column; justify-content:flex-start; align-items: flex-start;

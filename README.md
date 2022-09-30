@@ -1,16 +1,17 @@
-#TODO
+## TODO
 * frontend page
-    - main page (maybe combine with other) with upload(only in main page?) & search(右上 in header)
-    - upload page => show page
+    - upload page 
     - search page
+        - if empty => list all
 * change to_chart, make sure pic show
 
-* show both output_keyword & output_keyword_float
-* migrate file_title, picture 只有一張?
+
+### Not Emergency
 * check if program hang, and use try to modify
 * limit the wsl memory use
-
 * 整理 script (https://fastapi.tiangolo.com/advanced/templates/)
+
+
 
 ## how poetry works
 
