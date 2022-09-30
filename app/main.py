@@ -44,7 +44,7 @@ def html_main() -> str:
                         </div>
                         <input type="submit" id="submitUploader" value="Submit">
                         <div id="upload_result">
-                            <h3><span style="color: #296889;">Upload Result List:</strong></span></h3>
+                            <h3 id="result_title" style="visibility: hidden;"><span style="color: #296889;">Upload Result List:</strong></span></h3>
                         </div>
                     </form>
                 </div>
@@ -74,6 +74,7 @@ def html_main() -> str:
                     body: data,
                 }}
 
+                
                 document.getElementById("submitUploader").disabled = true;
                 fetch("http://127.0.0.1:8000/upload/multifiles", requestOptions)
                 .then(response => response.json())
@@ -98,9 +99,10 @@ def html_main() -> str:
                         document.getElementById("upload_result").appendChild(createA)
                         document.getElementById("upload_result").appendChild(para)
                     }}
+                    document.getElementById("submitUploader").disabled = false;
+                    document.getElementById("result_title").style.visibility = "visible";
 
                     
-                    document.getElementById("submitUploader").disabled = false;
                 }})
                 .catch(error => console.log('error', error));
 

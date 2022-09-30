@@ -5,6 +5,8 @@
         - if empty => list all
 * change to_chart, make sure pic show
 
+### Maybe Cause Some Bugs
+* If there are files with same filename, I should set filename as id when saving file 
 
 ### Not Emergency
 * check if program hang, and use try to modify
