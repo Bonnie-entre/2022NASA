@@ -1,7 +1,6 @@
 import re
 import pandas as pd
 from string import punctuation
-# from nltk.corpus import stopwords
 
 class Custom_preprocessing(object):
 

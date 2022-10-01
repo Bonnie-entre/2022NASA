@@ -12,7 +12,7 @@ def show_titles(posts):  #filename ideally
     html=''
     for i in range(len(posts)):
         post = dict(posts[i])
-        html+=f"""<p><span><a href="/files/content?file_id={post['id']}">{post['file_title']}</a></span></p>
+        html+=f"""<p><span><a href="/files/content?file_id={post['id']}" class="file_tiltle">{post['file_title']}</a></span></p>
                     <p><span>{post['filename']} - {post['output_outline']}</span></p>
                 """
     return html
@@ -54,7 +54,7 @@ def html_search_result(titles) -> str:
                 </header>
             
                 <div class="content" style="display:flex; flex-direction:column; width:80%; height:80%; justify-content:flex-start; align-items: flex-start;  position: fixed; top: 12%; overflow-y:scroll;">
-                    <h3><span style="color: #296889;">Search Result</span></h3>
+                    <h3><span style="color: #296889; font-size:36px;" class="search_result">Search Result</span></h3>
                     {titles}
                 </div>
 
@@ -70,6 +70,18 @@ def html_search_result(titles) -> str:
                 window.location.href =  "http://127.0.0.1:8000/search?outline=" + search_input + "&keyword=" + search_input          
             }}
         </script>
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@700&display=swap');
+            .search_result{{
+                font-family: 'Zilla Slab', serif;
+            }}
+            .file_tiltle{{
+                font-family: 'Zilla Slab', serif;
+                font-size: 24px;
+            }}
+        </style>
     </html>
 
     """

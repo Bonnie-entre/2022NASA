@@ -6,18 +6,22 @@ from ..database import get_db, connect_cursor, SessionLocal
 from sqlalchemy.orm import Session
 
 import imp
+from io import StringIO
 from os import listdir
 from os.path import isfile, join
 import PyPDF2
 from PyPDF2 import PdfFileReader
+from pdfminer.converter import TextConverter
+from pdfminer.layout import LAParams
+from pdfminer.pdfdocument import PDFDocument
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfparser import PDFParser
 from ..nlp_model import insert_db, Text_outline, hack_utils
 
 router = APIRouter()
 
 summarize = Text_outline.Summarize()
-# target_text = 'i am human'
-# summary = summarize.summarize(target_text=target_text)
-# print("Sum", summary)
 
 @router.get("/upload")  
 def upload_page():
@@ -50,12 +54,21 @@ async def upload_files(files: List[UploadFile], db: Session = Depends(get_db)): 
             print(f"#{next_file_id} filename={file}")
             pdfFileObj =  open(f"static/file/{file}", 'rb')
             pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
-            
-            pdf_one_line_text, pdf_final_text = hack_utils.pdf2text(pdfReader)
+            pdf_one_line_text = hack_utils.pdf2text(pdfReader)
+            PDF_string = StringIO()
+            parser = PDFParser(pdfFileObj)
+            doc = PDFDocument(parser)
+            rsrcmgr = PDFResourceManager()
+            device = TextConverter(rsrcmgr, PDF_string, laparams=LAParams())
+            interpreter = PDFPageInterpreter(rsrcmgr, device)
+            for page in PDFPage.create_pages(doc):
+                interpreter.process_page(page)
             pdf_sum = summarize.summarize(pdf_one_line_text)
             pdf_title = summarize.title(pdf_one_line_text)
+            pdf_final_text = hack_utils.pdf_string_prep(PDF_string.getvalue())
             key_word = hack_utils.find_key_word(pdf_final_text)
             hack_utils.to_chart(key_word, next_file_id)     
+            
 
             _keyword=[]
             _output_keyword_float=[]

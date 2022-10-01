@@ -1,69 +1,41 @@
-## TODO
-* frontend page
-    - upload page 
-    - search page
-        - if empty => list all
-* change to_chart, make sure pic show
+# NLP-Dog   Quick Pdf Reader
 
-### Maybe Cause Some Bugs
-* If there are files with same filename, I should set filename as id when saving file 
+![Alt text](./readmd.png?raw=true)
 
-### Not Emergency
-* check if program hang, and use try to modify
-* limit the wsl memory use
-* 整理 script (https://fastapi.tiangolo.com/advanced/templates/)
+Hello, We're NLP-Dog, who ethusiastic about NLP model applications!  
+Our project is a web browser that help users to do resources search.
+The main goal is to save users from large burden of filtering large ammounts articles & getting relative information.
+In our website, upload records articles from the public NTRS, you can grep keywords, outline and the picture showing words relationships by tenchniqe AI.
+Then search the keyword just show, you can access more highly-relative information.
+This Browser can offer users more effective ways to quickly view and wisely search articles! 
+<br><br>
+
+## Start to Use
+1. In main page, you can upload & search keywords
+2. If uploading multi files, you can get upload result. Click in and have more detail.
+3. If search with keywords, you can get relative articles
+4. If search with blank, you can get whole articles. Click in and have more detail.
+
+<br><br>
 
 
-
-## how poetry works
-
-* start venv
-
-    ```poetry shell```
+# How to make my project work?
 
 ## how fast api work
 
-* run server
+run server
 
-    ```uvicorn app.main:app --reload```
+```uvicorn app.main:app --reload```
+<br>
+
 
 ## how to start postgresql in wsl
 
-    ```sudo service postgresql start```
-    sudo -u postgres psql
+```sudo service postgresql start```
 
-    list database
-    ```\l```
+list database
+```\l```
     
-    list user
-    ```\du```
+list user
+```\du```
 
-## Problem
-
-* when import path err 
-
-    ```poetry run python -m nlp_model.test```
-
-## css
-### flex
-* container
-    display: flex
-    flex-direction:
-    justify-content: center; 
-    align-items: center;
-    width: ;
-
-* obj
-    no display
-
-
-## Alembic
-1. Add `sqlalchemy.url= postgresql.....` at ~/alembic.ini
-2. Modify ~/alembic/env.py
-    `target_metadata = Base.metadata` &  `from app.database import Base`
-    `from app.models import Files`
-
-Cmd:
-    alembic init alembic
-    alembic revision --autogenerate -m "Added files table"
-    alembic upgrade head

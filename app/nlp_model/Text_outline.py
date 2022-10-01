@@ -13,7 +13,7 @@ class Summarize(object):
     def summarize(self, target_text):
         target_text = self.custom_preprocessing.preprocessing_only_text(target_text=target_text)
         tokens = self.tokenizer(target_text, truncation=True, padding="longest", return_tensors="pt")
-        summary = self.model.generate(**tokens, min_length = 80, max_length = 120)
+        summary = self.model.generate(**tokens, min_length = 30, max_length = 80)
         return self.tokenizer.decode(summary[0])
 
     def title(self, target_text):
